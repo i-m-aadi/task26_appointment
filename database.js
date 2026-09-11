@@ -2,17 +2,17 @@ const Database = require("better-sqlite3");
 const path = require("path");
 const fs = require("fs");
 
-// Create database folder if it doesn't exist
+// Database folder
 const dbFolder = path.join(__dirname, "database");
 
 if (!fs.existsSync(dbFolder)) {
     fs.mkdirSync(dbFolder, { recursive: true });
 }
 
-// Create/open SQLite database
-const db = new Database(
-    path.join(dbFolder, "appointments.db")
-);
+// SQLite database
+const dbPath = path.join(dbFolder, "appointments.db");
+
+const db = new Database(dbPath);
 
 db.pragma("foreign_keys = ON");
 
@@ -65,25 +65,35 @@ db.exec(`
     WHERE status = 'booked';
 `);
 
-// Create default provider
+// Check providers
 const providerCount = db
     .prepare("SELECT COUNT(*) AS count FROM providers")
     .get();
 
+console.log("Existing providers:", providerCount.count);
+
+// Create default provider if none exists
 if (providerCount.count === 0) {
 
-    const insertProvider = db.prepare(`
-        INSERT INTO providers (name, email)
-        VALUES (?, ?)
-    `);
+    const providerResult = db
+        .prepare(`
+            INSERT INTO providers
+            (name, email)
+            VALUES (?, ?)
+        `)
+        .run(
+            "Dr. Rahul Sharma",
+            "rahul@example.com"
+        );
 
-    const provider = insertProvider.run(
-        "Dr. Rahul Sharma",
-        "rahul@example.com"
+    const providerId = providerResult.lastInsertRowid;
+
+    console.log(
+        "Created provider with ID:",
+        providerId
     );
 
-    const providerId = provider.lastInsertRowid;
-
+    // Monday-Friday
     const insertAvailability = db.prepare(`
         INSERT INTO availability
         (
@@ -96,8 +106,8 @@ if (providerCount.count === 0) {
         VALUES (?, ?, ?, ?, ?)
     `);
 
-    // Monday to Friday
     for (let day = 1; day <= 5; day++) {
+
         insertAvailability.run(
             providerId,
             day,
@@ -107,9 +117,23 @@ if (providerCount.count === 0) {
         );
     }
 
-    console.log("Default provider created.");
+    console.log(
+        "Provider availability created."
+    );
 }
 
-console.log("Database initialized successfully.");
+// Verify provider
+const providers = db
+    .prepare("SELECT * FROM providers")
+    .all();
+
+console.log(
+    "Providers in database:",
+    providers
+);
+
+console.log(
+    "Database initialized successfully."
+);
 
 module.exports = db;
