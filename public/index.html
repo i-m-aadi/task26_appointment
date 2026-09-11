@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Appointment Booking System</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+</head>
+
+<body>
+
+<header>
+    <div class="container">
+        <h1>Appointment Booking System</h1>
+        <p>Book your appointment in a few simple steps.</p>
+    </div>
+</header>
+
+
+<main class="container">
+
+    <!-- Provider Section -->
+
+    <section class="card">
+
+        <h2>1. Select Provider</h2>
+
+        <select id="providerSelect">
+            <option value="">
+                Select a provider
+            </option>
+        </select>
+
+    </section>
+
+
+    <!-- Date Section -->
+
+    <section class="card">
+
+        <h2>2. Select Date</h2>
+
+        <input
+            type="date"
+            id="dateInput"
+        >
+
+    </section>
+
+
+    <!-- Slots -->
+
+    <section class="card">
+
+        <h2>3. Available Time Slots</h2>
+
+        <div id="slotsContainer">
+
+            <p class="empty">
+                Select a provider and date.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- Booking Form -->
+
+    <section
+        class="card"
+        id="bookingSection"
+        style="display: none;"
+    >
+
+        <h2>4. Book Appointment</h2>
+
+        <div class="selected-slot">
+
+            Selected Slot:
+            <strong id="selectedSlot"></strong>
+
+        </div>
+
+
+        <form id="bookingForm">
+
+            <label>
+                Your Name
+            </label>
+
+            <input
+                type="text"
+                id="clientName"
+                required
+                placeholder="Enter your name"
+            >
+
+
+            <label>
+                Email
+            </label>
+
+            <input
+                type="email"
+                id="clientEmail"
+                required
+                placeholder="Enter your email"
+            >
+
+
+            <button type="submit">
+                Confirm Appointment
+            </button>
+
+        </form>
+
+    </section>
+
+
+    <!-- Appointments -->
+
+    <section class="card">
+
+        <h2>My Appointments</h2>
+
+        <button
+            onclick="loadAppointments()"
+            class="secondary"
+        >
+            Refresh
+        </button>
+
+        <div id="appointmentsContainer">
+
+            <p class="empty">
+                No appointments loaded.
+            </p>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<div
+    id="message"
+    class="message"
+></div>
+
+
+<script src="app.js"></script>
+
+</body>
+
+</html>
